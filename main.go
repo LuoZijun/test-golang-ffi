@@ -1,11 +1,10 @@
 package main
 
 // #cgo LDFLAGS: ${SRCDIR}/target/release/libtest_go.a
-// #include <stdint.h>
-// int *rust_main(const uint8_t *ptr, size_t len);
+// #include "./libtest_go.h"
 import "C"
 import "unsafe"
-// import "fmt"
+import "fmt"
 
 func main() {
 	var data []byte
@@ -14,12 +13,14 @@ func main() {
 	data[1] = 104
 	data[18] = 19
 	data[19] = 20
+	
+	fmt.Printf("Golang Byte Slice: %d\n", data);
 
 	size := C.size_t(len(data));
 	
 	ptr := (*C.uint8_t)(unsafe.Pointer(&data));
 	C.rust_main(ptr, size)
-	
-	ptr := (*C.uint8_t)(unsafe.Pointer(&data[0]));
+
+	ptr = (*C.uint8_t)(unsafe.Pointer(&data[0]));
 	C.rust_main(ptr, size)
 }
